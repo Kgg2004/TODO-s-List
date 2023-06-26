@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="main">
+        <h1>ToDos List</h1>
+        <div class="first">
+
+            <h2>Title</h2>
+            <input type="text" id="title">
+            <h3>Add an Item to the List</h3>
+            <br>
+            <h2>Description</h2>
+            <textarea name="description" id="des"></textarea>
+            <br>
+            <br>
+            <button id="add">Add to List</button>
+            <button id="clear " onclick="cleared()">Clear List</button>
+            <br>
+        </div>
+    </div>
+    <br>
+    <br>
+    <h1>Your List</h1>
+    <div class="table">
+        <table>
+            <thead id="tablehead">
+                <tr>
+                    <th>S.NO.</th>
+                    <th class="item">Item Title</th>
+                    <th class="ds" style="width:
+                50%">Item Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableb">
+                <tr>
+                    <th>1</th>
+                    <th>Get physics books</th>
+                    <th>Exam is coming</th>
+                    <th class="buttons"><button id="edit" onclick="edited()">
+                            <div><img src="https://cdn-icons-png.flaticon.com/512/2921/2921179.png" alt=""></div>
+                        </button>
+                        <button id="del" onclick="deleted()">
+                            <div><span class="close">+</span></div>
+                        </button>
+                    </th>
+                    </th>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const addt = document.getElementById('add');
+        const changeadd = addt.innerText;
+        let edit_id = null;
+        itemsarray = [];
+        tablebody = document.getElementById('tableb');
+
+        objstr = localStorage.getItem('items');
+
+        if (objstr != null) {
+            itemsarray = JSON.parse(objstr);
+        }
+        displayinfo();
+
+        addt.onclick = () => {
+            console.log('updating');
+            const titl = document.getElementById('title').value;
+            const desi = document.getElementById('des').value;
+
+
+
+            if (edit_id != null) {
+                if (titl == '' && desi == '') {
+                    alert("You must write something!");
+
+                }
+                else {
+                    itemsarray.splice(edit_id, 1, [titl, desi])
+                }
+            }
+            else {
+
+                // if (localStorage.getItem('items') == null) {
+                //     let itemsarray = [];
+                //     itemsarray.push([titl, desi]);
+                //     localStorage.setItem('items', JSON.stringify(itemsarray));
+                // }
+                // else {
+                if (titl == '' && desi == '') {
+                    alert("You must write something!");
+
+                }
+                else {
+                    itemsarray.push([titl, desi]);
+
+
+
+                }
+            }
+
+            saveinfo(itemsarray);
+
+
+
+            document.getElementById('title').value = "";
+            document.getElementById('des').value = "";
+
+
+
+            displayinfo();
+            addt.innerText = changeadd;
+            edit_id=null;
+
+        }
+        function saveinfo(itemsarray) {
+
+            localStorage.setItem('items', JSON.stringify(itemsarray));
+        }
+
+        // if (localStorage.getItem('items') == null) {
+        //     itemsarray = [];
+
+
+
+        //     localStorage.setItem('items', JSON.stringify(itemsarray));
+        // }
+        // else {
+
+        //     itemsarray = JSON.parse(localStorage.getItem('items'));
+        // // }
+        // tablebody = document.getElementById('tableb')
+        function displayinfo() {
+            str1 = "";
+            itemsarray.forEach((element, index) => {
+               str1 += `
+                <tr>
+                <th>${index + 1}</th>
+                <th>${element[0]}</th>
+                <th>${element[1]}</th>
+                <th><button id="edit"  onclick="edited(${index})"><div><img src="https://cdn-icons-png.flaticon.com/512/2921/2921179.png" alt=""></div></button>
+                    <button id="del" onclick="deleted(${index})"><div><span class="close">+</span></div></button></th>
+          </tr>`
+            });
+            tablebody.innerHTML = str1;
+
+        }
+
+        // addt.addEventListener("click", getandupdate);
+        // update();
+        function deleted(itemindex) {
+            // console.log("Delete", itemindex);
+            // itemsarray = JSON.parse(localStorage.getItem('items'));
+            // itemsarray.splice(itemindex, 1);
+            // localStorage.setItem('items', JSON.stringify(itemsarray));
+            // update();
+            itemsarray.splice(itemindex, 1);
+            saveinfo(itemsarray);
+            displayinfo();
+        }
+        function cleared() {
+            console.log('cleared');
+            localStorage.clear();
+            addt.innerText = changeadd;
+            // saveinfo(itemsarray);
+           
+            
+            document.location.reload();
+
+        }
+        function edited(index) {
+            edit_id = index;
+            titl = itemsarray[index][0];
+            desi = itemsarray[index][1];
+
+            addt.innerText = "Save Changes";
+
+
+
+
+        }
+
+
+
+
+
+    </script>
+</body>
+
+</html>
